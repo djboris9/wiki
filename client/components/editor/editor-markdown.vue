@@ -454,21 +454,24 @@ export default {
       this.processContent(newContent)
     }, 600),
     onCmPaste (cm, ev) {
-      // const clipItems = (ev.clipboardData || ev.originalEvent.clipboardData).items
-      // for (let clipItem of clipItems) {
-      //   if (_.startsWith(clipItem.type, 'image/')) {
-      //     const file = clipItem.getAsFile()
-      //     const reader = new FileReader()
-      //     reader.onload = evt => {
-      //       this.$store.commit(`loadingStart`, 'editor-paste-image')
-      //       this.insertAfter({
-      //         content: `![${file.name}](${evt.target.result})`,
-      //         newLine: true
-      //       })
-      //     }
-      //     reader.readAsDataURL(file)
-      //   }
-      // }
+      const clipItems = (ev.clipboardData || ev.originalEvent.clipboardData).items
+      for (let clipItem of clipItems) {
+        if (_.startsWith(clipItem.type, 'image/')) {
+          const file = clipItem.getAsFile()
+          const reader = new FileReader()
+          reader.onload = evt => {
+            /* TODO: Upload and link blob instead of pasing base64 data into MD */
+            console.log(file)
+            console.log(reader)
+            this.$store.commit(`loadingStart`, 'editor-paste-image')
+            this.insertAfter({
+              content: `![${file.name}](${evt.target.result})`,
+              newLine: true
+            })
+          }
+          reader.readAsDataURL(file)
+        }
+      }
     },
     processContent (newContent) {
       linesMap = []
